@@ -2,10 +2,7 @@ var webpackConfig = require('./webpack.config.js');
 
 module.exports = function (config) {
   config.set({
-    hostname : process.env.IP,
-    port : 8081,
-    runnerPort : 0,
-    browsers: ['PhantomJs'],
+    browsers: ['Chrome'],
     singleRun: true,
     frameworks: ['mocha'],
     files: ['app/tests/**/*.test.jsx',
