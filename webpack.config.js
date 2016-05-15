@@ -1,6 +1,5 @@
 var webpack = require('webpack');
-var path = require("path");
-
+var path = require('path');
 
 module.exports = {
   entry: [
@@ -15,7 +14,7 @@ module.exports = {
     new webpack.ProvidePlugin({
       '$': 'jquery',
       'jQuery': 'jquery'
-    })
+    }),
   ],
   output: {
     path: __dirname,
@@ -23,6 +22,11 @@ module.exports = {
   },
   resolve: {
     root: __dirname,
+    modulesDirectories: [
+      'node_modules',
+      './app/components',
+      "./playground"
+    ],
     alias: {
       applicationStyles: 'app/styles/app.scss'
     },
@@ -33,7 +37,8 @@ module.exports = {
       {
         loader: 'babel-loader',
         query: {
-          presets: ['react', 'es2015', 'stage-0']
+          presets: ['react', 'es2015', 'stage-0'],
+          plugins: ['transform-object-rest-spread']
         },
         test: /\.jsx?$/,
         exclude: /(node_modules|bower_components)/
@@ -42,8 +47,8 @@ module.exports = {
   },
   sassLoader: {
     includePaths: [
-      path.resolve(__dirname, "./node_modules/foundation-sites/scss")
-      ]
+      path.resolve(__dirname, './node_modules/foundation-sites/scss')
+    ]
   },
   devtool: 'cheap-module-eval-source-map'
 };

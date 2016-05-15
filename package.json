@@ -1,6 +1,13 @@
 {
   "name": "boilerplate",
   "version": "1.0.0",
+  "babel": {
+    "env": {
+    "production": {
+      "plugins": ["transform-object-rest-spread"]
+    }
+  }
+  },
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -30,7 +37,6 @@
     "karma-chrome-launcher": "^0.2.2",
     "karma-mocha": "^0.2.2",
     "karma-mocha-reporter": "^2.0.0",
-    "karma-phantomjs-launcher": "^1.0.0",
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^1.7.0",
     "mocha": "^2.4.5",
@@ -40,4 +46,5 @@
     "style-loader": "^0.13.0",
     "webpack": "^1.12.13"
   }
+
 }
