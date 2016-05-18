@@ -1,6 +1,6 @@
 var React = require("react");
 var Todo = require("Todo");
-
+var {connect} = require('react-redux');
 var TodoList = React.createClass({
 
   render: function() {
@@ -12,7 +12,7 @@ var TodoList = React.createClass({
         );
       };
        return todos.map((todo) => {
-        return <Todo {...todo} key = {todo.id} onToggle={this.props.onToggle}/>
+        return <Todo {...todo} key = {todo.id} />
       });
     };
 
@@ -24,5 +24,10 @@ var TodoList = React.createClass({
   }
 });
 
-
-module.exports = TodoList;
+module.export = connect( // this allows us acces state and return concrete prop of state, and use it as props in this component
+  (state) => {
+    return {
+      todos: state.todos
+    };
+  }
+)(TodoList);
