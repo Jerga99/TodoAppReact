@@ -1,90 +1,96 @@
-var expect = require("expect");
+var expect = require('expect');
 
 var TodoAPI = require('TodoAPI');
 
 describe('TodoAPI', () => {
-  it("should exist", () => {
+  beforeEach(() => {
+    localStorage.removeItem('todos');
+  });
+
+  it('should exist', () => {
     expect(TodoAPI).toExist();
   });
-  describe("setTodos", () => {
-    beforeEach(() => {
-      localStorage.removeItem('todos');
-    }); //its called before each test
-    it("should set valid todos array", () => {
+
+  describe('setTodos', () => {
+    it('should set valid todos array', () => {
       var todos = [{
-        id: 10,
-        text: "test todo",
+        id: 23,
+        test: 'test all files',
         completed: false
       }];
       TodoAPI.setTodos(todos);
+
       var actualTodos = JSON.parse(localStorage.getItem('todos'));
 
       expect(actualTodos).toEqual(todos);
     });
 
-    it("should not set invalid todos array", () => {
-      var badTodos = { a: 'b' };
+    it('should not set invalid todos array', () => {
+      var badTodos = {a: 'b'};
       TodoAPI.setTodos(badTodos);
 
       expect(localStorage.getItem('todos')).toBe(null);
-
     });
   });
 
-  describe("getTodos", () => {
-    it("should return empty array for bad localStorage data", () => {
+  describe('getTodos', () => {
+    it('should return empty array for bad localstorage data', () => {
       var actualTodos = TodoAPI.getTodos();
-
       expect(actualTodos).toEqual([]);
     });
 
-    it("should return todos if valid array in local storage", () => {
+    it('should return todo if valid array in localstorage', () => {
       var todos = [{
-        id: 10,
-        text: "test todo",
+        id: 23,
+        test: 'test all files',
         completed: false
       }];
-      localStorage.setItem("todos", JSON.stringify(todos));
 
+      localStorage.setItem('todos', JSON.stringify(todos));
       var actualTodos = TodoAPI.getTodos();
 
       expect(actualTodos).toEqual(todos);
     });
   });
-  describe("filter todos", () => {
+
+  describe('filterTodos', () => {
     var todos = [{
       id: 1,
-      text: "some text",
+      text: 'Some text here',
       completed: true
     },{
       id: 2,
-      text: "other text",
+      text: 'Other text here',
       completed: false
     },{
       id: 3,
-      text: "diffrent text",
+      text: 'Some text here',
       completed: true
-    },
-  ];
-  it("should return all items if show completed is true", () => {
-    var filteredTodos = TodoAPI.filterTodos(todos, true, '');
-    expect(filteredTodos.length).toBe(3);
-  });
-  it("should return todo items if show completed is false", () => {
-    var filteredTodos = TodoAPI.filterTodos(todos, false, '');
-    expect(filteredTodos.length).toBe(1);
-  });
-  it("should sort by completed status", () => {
-    var filteredTodos = TodoAPI.filterTodos(todos, true, '');
-    expect(filteredTodos[0].completed).toBe(false);
-  });
-  it("should filter todos by search text", () => {
-    var filteredTodos = TodoAPI.filterTodos(todos, true, 'some');
-    expect(filteredTodos.length).toBe(1);
-  });
-  it("should return all todos if search text is empty", () => {
-    var filteredTodos = TodoAPI.filterTodos(todos, true, '');
-    expect(filteredTodos.length).toBe(3);
-  });
+    }];
+
+    it('should return all items if showCompleted is true', () => {
+      var filteredTodos = TodoAPI.filterTodos(todos, true, '');
+      expect(filteredTodos.length).toBe(3);
+    });
+
+    it('should return non-completed todos when showCompleted is false', () => {
+      var filteredTodos = TodoAPI.filterTodos(todos, false, '');
+      expect(filteredTodos.length).toBe(1);
+    });
+
+    it('should sort by completed status', () => {
+      var filteredTodos = TodoAPI.filterTodos(todos, true, '');
+      expect(filteredTodos[0].completed).toBe(false);
+    });
+
+    it('should filter todos by searchText', () => {
+      var filteredTodos = TodoAPI.filterTodos(todos, true, 'some');
+      expect(filteredTodos.length).toBe(2);
+    });
+
+    it('should return all todos if searchText is empty', () => {
+      var filteredTodos = TodoAPI.filterTodos(todos, true, '');
+      expect(filteredTodos.length).toBe(3);
+    });
   });
 });

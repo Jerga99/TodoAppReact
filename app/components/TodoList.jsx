@@ -1,33 +1,35 @@
-var React = require("react");
-var Todo = require("Todo");
+var React = require('react');
 var {connect} = require('react-redux');
-var TodoList = React.createClass({
+import Todo from 'Todo';
+var TodoAPI = require('TodoAPI');
 
-  render: function() {
-    var {todos} = this.props;
+export var TodoList = React.createClass({
+  render: function () {
+    var {todos, showCompleted, searchText} = this.props;
     var renderTodos = () => {
-      if(todos.length === 0) {
+      if (todos.length === 0) {
         return (
           <p className="container__message">Nothing To Do</p>
         );
-      };
-       return todos.map((todo) => {
-        return <Todo {...todo} key = {todo.id} />
+      }
+
+      return TodoAPI.filterTodos(todos, showCompleted, searchText).map((todo) => {
+        return (
+          <Todo key={todo.id} {...todo}/>
+        );
       });
     };
 
-      return (
-        <div>
-          {renderTodos()}
-        </div>
-      );
+    return (
+      <div>
+        {renderTodos()}
+      </div>
+    )
   }
 });
 
-module.export = connect( // this allows us acces state and return concrete prop of state, and use it as props in this component
+export default connect(
   (state) => {
-    return {
-      todos: state.todos
-    };
+    return state;
   }
 )(TodoList);

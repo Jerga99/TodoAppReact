@@ -1,10 +1,10 @@
-var expect = require("expect");
-var actions = require("actions");
+var expect = require('expect');
+var actions = require('actions');
 
-describe("Actions", () => {
-  it("should generate search text action", () => {
+describe('Actions', () => {
+  it('should generate search text action', () => {
     var action = {
-      type : "SET_SEARCH_TEXT",
+      type: 'SET_SEARCH_TEXT',
       searchText: 'Some search text'
     };
     var res = actions.setSearchText(action.searchText);
@@ -12,29 +12,37 @@ describe("Actions", () => {
     expect(res).toEqual(action);
   });
 
-  it("should generate todo action", () => {
+  it('should generate toggle show completed action', () => {
     var action = {
-      type : "ADD_TODO",
-      text: 'Walk a dog'
-    };
-    var res = actions.addTodo(action.text);
-
-    expect(res).toEqual(action);
-  });
-
-  it("should toggle show compeleted todos", () => {
-    var action = {
-      type : "TOGGLE_SHOW_COMPLETED",
+      type: 'TOGGLE_SHOW_COMPLETED'
     };
     var res = actions.toggleShowCompleted();
 
     expect(res).toEqual(action);
   });
 
-  it("should toggle single todo ", () => {
+  it('should generate add todos action object', () => {
+    var todos = [{
+        id: 111,
+        text: "anything",
+        completed: false,
+        completedAt: undefined,
+        createdAt: 44
+      }];
+
+      var action = {
+        type: "ADD_TODOS",
+        todos
+      };
+    var res = actions.addTodos(todos);
+
+    expect(res).toEqual(action);
+  });
+
+  it('should generate toggle todo action', () => {
     var action = {
-      type : "TOGGLE_TODO",
-      id: 2
+      type: 'TOGGLE_TODO',
+      id: '123'
     };
     var res = actions.toggleTodo(action.id);
 

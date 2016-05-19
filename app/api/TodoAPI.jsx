@@ -1,52 +1,49 @@
-var $ = require("jquery");
+var $ = require('jquery');
 
 module.exports = {
   setTodos: function (todos) {
-    if($.isArray(todos)){
+    if ($.isArray(todos)) {
       localStorage.setItem('todos', JSON.stringify(todos));
       return todos;
     }
   },
-
-  getTodos: function (){
+  getTodos: function () {
     var stringTodos = localStorage.getItem('todos');
     var todos = [];
+
     try {
       todos = JSON.parse(stringTodos);
     } catch (e) {
 
     }
+
     return $.isArray(todos) ? todos : [];
   },
-
-  filterTodos: function(todos, showCompleted, searchText) {
+  filterTodos: function (todos, showCompleted, searchText) {
     var filteredTodos = todos;
 
-    //Filter by showCompleted
+    // Filter by showCompleted
     filteredTodos = filteredTodos.filter((todo) => {
-      return !todo.completed || showCompleted; // if todo is not complited its gona be in filter todollist
+      return !todo.completed || showCompleted;
     });
-    //Filter by Search text
-      filteredTodos = filteredTodos.filter((todo) => {
-        var todoText = todo.text.toLowerCase();
 
-        return searchText.length === 0 || todoText.indexOf(searchText) > -1;
-      });
+    // Filter by searchText
+    filteredTodos = filteredTodos.filter((todo) => {
+      var text = todo.text.toLowerCase();
+      return searchText.length === 0 || text.indexOf(searchText) > -1;
+    });
 
-
-    //Sort todos with non -complited first
-    filteredTodos.sort((a,b) => {
-      if( !a.completed && b.completed) {
+    // Sort todos with non-completed first
+    filteredTodos.sort((a, b) => {
+      if (!a.completed && b.completed) {
         return -1;
-      } else if( a.completed && !b.completed) {
+      } else if (a.completed && !b.completed) {
         return 1;
-      }
-      else {
+      } else {
         return 0;
       }
     });
 
     return filteredTodos;
   }
-
 };
