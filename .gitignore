@@ -1,3 +1,2 @@
 node_modules/
-
-app/firebase/
+public/bundle.js
