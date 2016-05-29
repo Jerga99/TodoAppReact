@@ -1,5 +1,11 @@
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+import firebase, {firebaseRef} from "app/firebase";
+
 var expect = require('expect');
 var actions = require('actions');
+
+var createMockStore = configureMockStore([thunk]);
 
 describe('Actions', () => {
   it('should generate search text action', () => {
@@ -39,13 +45,107 @@ describe('Actions', () => {
     expect(res).toEqual(action);
   });
 
-  it('should generate toggle todo action', () => {
+  it('should generate update todo action', () => {
     var action = {
-      type: 'TOGGLE_TODO',
-      id: '123'
+      type: 'UPDATE_TODO',
+      id: '123',
+      updates: {completed: false}
     };
-    var res = actions.toggleTodo(action.id);
+    var res = actions.updateTodo(action.id, action.updates);
 
     expect(res).toEqual(action);
   });
+
+  it('should generate add todo action object', () => {
+    var action = {
+      type : "ADD_TODO",
+      todo: {
+        id: '124',
+        text: "bla bla",
+        completed: false,
+        createdAt: 0
+      }
+    };
+    var res = actions.addTodo(action.todo);
+
+    expect(res).toEqual(action);
+  });
+    it('Should create todo and dispatch ADD_TODO', (done) => {
+        const store = createMockStore({});
+        const todoText = "My todo item";
+
+        store.dispatch(actions.startAddTodo(todoText)).then(() => {
+            const actions = store.getActions();
+            expect(actions[0]).toInclude({
+                type: 'ADD_TODO'
+            });
+            expect(actions[0].todo).toInclude({
+                text: todoText
+            });
+            done();
+        }).catch(done);
+
+    });
+
+    describe('Tests with firebase todos', () => {
+       var testTodoRef;
+
+        beforeEach((done) => {
+            var todosRef = firebaseRef.child('todos');
+
+            todosRef.remove().then(() => {
+                testTodoRef = firebaseRef.child('todos').push();
+
+                return testTodoRef.set({
+                    text: 'Something todo',
+                    completed: false,
+                    createdAt: 32424
+                })
+              }).then(() => done())
+                .catch(done);
+        });
+
+        afterEach((done) => {
+            testTodoRef.remove().then(() => done());
+        });
+
+        it("should toggle todo and dispatch UPDATE_TODO action", (done) => {
+            const store = createMockStore({});
+            const action = actions.startToggleTodo(testTodoRef.key, true);
+         //   console.log(action);
+
+            store.dispatch(action).then(() => {
+                const mockAction = store.getActions();
+
+                expect(mockAction[0]).toInclude({
+                    type: 'UPDATE_TODO',
+                    id: testTodoRef.key,
+                });
+
+                expect(mockAction[0].updates).toInclude({
+                    completed: true
+                });
+
+                expect(mockAction[0].updates.completedAt).toExist();
+
+                done();
+            },done);
+        });
+
+        it("should populate todos and dispatch ADD_TODOS actions", (done) => {
+            const store = createMockStore({});
+            const action = actions.startAddTodos();
+
+            store.dispatch(action).then(() => {
+               const mockAction = store.getActions();
+                console.log(mockAction);
+                expect(mockAction[0]).toInclude({
+                   type: "ADD_TODOS"
+                });
+                expect(mockAction[0].todos.length).toEqual(1);
+                expect(mockAction[0].todos[0].text).toEqual("Something todo");
+                done();
+            }, done);
+        });
+    });
 });
