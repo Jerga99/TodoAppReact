@@ -20,6 +20,8 @@ var TodoAPI = require('TodoAPI');
 
 store.dispatch(actions.startAddTodos()); // fetching data
 
+console.log(process.env.NODE_ENV);
+
 // Load foundation
 $(document).foundation();
 
