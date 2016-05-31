@@ -42,7 +42,24 @@ export var todosReducer = (state = [], action) => {
         ...state,
         ...action.todos
       ];
+    case "CLEAN_TODOS":
+          return [];
     default:
       return state;
+  }
+};
+
+export var authReducer = (state = {}, action) => {
+  console.log("reducer: ", action);
+  switch(action.type){
+    case  "LOGIN" :
+          return action.auth;
+    case "LOGOUT" :
+          return  {
+              ...state,
+             uid: ''
+          };
+    default:
+          return state;
   }
 };

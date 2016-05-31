@@ -86,5 +86,52 @@ describe('Reducers', () => {
         expect(res.length).toEqual(1);
         expect(res[0]).toEqual(todos[0]);
     });
+
+    it("should wipe todos on logout", () => {
+      var todos = [{
+        id: 111,
+        text: "anything",
+        completed: false,
+        completedAt: undefined,
+        createdAt: 44
+      }];
+
+      var action = {
+        type: "CLEAN_TODOS"
+      };
+      var res = reducers.todosReducer(df(todos), df(action));
+
+      expect(res.length).toEqual(0);
+    });
   });
+  describe("AuthReducer", () => {
+    it("should save user uid", () => {
+      var action = {
+        type: "LOGIN",
+        auth: {
+          uid: '123'
+        }
+
+      };
+      var auth = {
+          uid: '123'
+      };
+      var res = reducers.authReducer(df({}), df(action));
+
+      expect(res).toEqual(auth);
+    });
+    it("should set user uid to empty string", () => {
+      var action = {
+        type: "LOGOUT"
+      };
+
+      var auth = {
+        uid: ''
+      };
+      var res = reducers.authReducer(df({}), df(action));
+
+      expect(res).toEqual(auth);
+    });
+  });
+
 });
